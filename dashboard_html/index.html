@@ -1,0 +1,136 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Avisos | BrillAseo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="brand-panel">
+      <div class="brand-image" aria-hidden="true"></div>
+      <div class="brand-overlay"></div>
+      <div class="brand-content">
+        <div class="project-tag"><span></span> Seguimiento documental</div>
+        <h1>Dashboard de<br><strong>Avisos</strong></h1>
+        <p>Cruce automatico de avisos contra archivos montados en Teams.</p>
+        <div class="brand-icons">
+          <div>
+            <svg class="brand-svg" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4 39 10v12c0 10-6.4 18.4-15 22C15.4 40.4 9 32 9 22V10l15-6Z"/><path d="m17 24 5 5 10-12"/></svg>
+            <b>CONTROL</b><small>documental</small>
+          </div>
+          <div>
+            <svg class="brand-svg" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 11h16a7 7 0 0 1 0 14h-2a7 7 0 0 0 0 14h16"/><circle cx="9" cy="11" r="4"/><circle cx="39" cy="39" r="4"/><path d="M31 33h8v8"/></svg>
+            <b>FLUJO</b><small>operativo</small>
+          </div>
+          <div>
+            <svg class="brand-svg" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 38h30"/><path d="M14 32l7-9 6 5 8-13"/><path d="M35 15h-8"/><path d="M35 15v8"/><circle cx="14" cy="32" r="3"/><circle cx="21" cy="23" r="3"/><circle cx="27" cy="28" r="3"/></svg>
+            <b>TRAZA</b><small>hallazgos</small>
+          </div>
+        </div>
+      </div>
+      <div class="logo-mark"><span>Brill</span><strong>A</strong><span>seo</span><small>Gestion Locativa Integral</small></div>
+    </aside>
+
+    <main class="dashboard">
+      <div class="author-watermark"><img src="assets/bryan-watermark.png" alt="Elaborado por Bryan Martinez"><span>Elaborado por Bryan Martinez</span></div>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">SharePoint Soportes Espejo</p>
+          <h2>Estado de montaje de avisos</h2>
+        </div>
+        <div class="actions">
+          <input id="xlsxInput" type="file" accept=".xlsx,.xlsm,.xls" hidden>
+          <button id="refreshCross" type="button">Actualizar cruce</button>
+          <button id="loadXlsx" type="button">Cargar AVISOS.xlsx</button>
+          <button id="resetFilters" type="button">Limpiar filtros</button>
+          <button id="exportCsv" type="button" class="primary">Exportar vista</button>
+        </div>
+      </header>
+      <div id="fileStatus" class="file-status">Fuente actual: cruce generado previamente.</div>
+
+      <section class="filters" aria-label="Filtros">
+        <label>Estado<select id="stateFilter"><option value="">Todos</option></select></label>
+        <label>Año<select id="yearFilter"><option value="">Todos</option></select></label>
+        <label>Mes<select id="monthFilter"><option value="">Todos</option></select></label>
+        <div class="check-filter">
+          <div class="check-title">Status sistema</div>
+          <div class="check-actions"><button type="button" data-check-action="all" data-target="statusSystemChecks">Todos</button><button type="button" data-check-action="none" data-target="statusSystemChecks">Ninguno</button></div>
+          <div class="check-options" id="statusSystemChecks"></div>
+        </div>
+        <div class="check-filter">
+          <div class="check-title">Codif.</div>
+          <div class="check-actions"><button type="button" data-check-action="all" data-target="codifChecks">Todos</button><button type="button" data-check-action="none" data-target="codifChecks">Ninguno</button></div>
+          <div class="check-options" id="codifChecks"></div>
+        </div>
+        <div class="check-filter status-user-filter">
+          <div class="check-title">Status usuario</div>
+          <div class="check-actions"><button type="button" data-check-action="all" data-target="statusUserChecks">Todos</button><button type="button" data-check-action="none" data-target="statusUserChecks">Ninguno</button></div>
+          <div class="check-options" id="statusUserChecks"></div>
+        </div>
+        <div class="check-filter small">
+          <div class="check-title">Excluir</div>
+          <label class="check-line"><input id="excludePtbo" type="checkbox" checked> PTBO</label>
+          <label class="check-line"><input id="excludeCotizaciones" type="checkbox" checked> COTIZACIONES</label>
+        </div>
+        <label>Contratista<select id="contractorFilter"><option value="">Todos</option></select></label>
+        <label class="search-label">Buscar<input id="searchInput" type="search" placeholder="Aviso, archivo o descripcion"></label>
+      </section>
+
+      <section class="kpi-grid">
+        <article class="kpi"><span>Total avisos</span><strong id="kpiTotal">0</strong><small>Base maestro</small></article>
+        <article class="kpi good"><span>Montados</span><strong id="kpiMontados">0</strong><small>Una cotizacion</small></article>
+        <article class="kpi warn"><span>Pendientes</span><strong id="kpiPendientes">0</strong><small>Sin hallazgo</small></article>
+        <article class="kpi amber"><span>Duplicados</span><strong id="kpiDuplicados">0</strong><small>Varias cotizaciones</small></article>
+        <article class="kpi"><span>% montaje</span><strong id="kpiPct">0%</strong><small>Montados + duplicados</small></article>
+        <article class="kpi"><span>Archivos</span><strong id="kpiFiles">0</strong><small>Revisados</small></article>
+        <article class="kpi ptbo"><span>PTBO</span><strong id="kpiPtbo">0</strong><small>Peticion de borrado</small></article>
+      </section>
+
+      <section class="tables">
+        <article class="panel table-panel">
+          <div class="panel-head table-head"><h3>Detalle de avisos</h3><div class="table-actions"><span id="avisosCount"></span><button id="exportAvisosExcel" type="button" class="mini-action">Exportar Excel</button></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Aviso</th><th>Estado</th><th>Status sistema</th><th>Status usuario</th><th>Codif.</th><th>Descripcion</th><th>Fecha</th><th>Grupo</th><th>Emplazamiento</th><th>Contratista</th><th>Cotizaciones</th><th>Hallazgos</th></tr></thead><tbody id="avisosTable"></tbody></table></div>
+        </article>
+        <article class="panel table-panel">
+          <div class="panel-head"><h3>Hallazgos</h3><span id="hallazgosCount"></span></div>
+          <div class="table-wrap"><table><thead><tr><th>Aviso</th><th>Archivo</th><th>Tipo</th><th>Hoja</th><th>Celda</th></tr></thead><tbody id="hallazgosTable"></tbody></table></div>
+        </article>
+      </section>
+
+      <section class="visual-grid">
+        <article class="panel donut-panel">
+          <div class="panel-head"><h3>Distribucion por estado</h3><span id="visibleCount">0 registros</span></div>
+          <div class="donut-wrap">
+            <div id="donut" class="donut"></div>
+            <div id="legend" class="legend"></div>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-head"><h3>Avisos por grupo</h3></div>
+          <div id="groupBars" class="bars"></div>
+        </article>
+        <article class="panel wide">
+          <div class="panel-head"><h3>Hallazgos por archivo</h3></div>
+          <div id="fileBars" class="bars compact"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <script src="xlsx.full.min.js"></script>
+  <script src="data.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

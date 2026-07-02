@@ -1,0 +1,7 @@
+tunnel: TU_TUNNEL_ID
+credentials-file: C:\Users\TU_USUARIO\.cloudflared\TU_TUNNEL_ID.json
+
+ingress:
+  - hostname: avisos.tudominio.com
+    service: http://127.0.0.1:8765
+  - service: http_status:404

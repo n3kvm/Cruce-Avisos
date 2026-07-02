@@ -1,0 +1,16 @@
+name = "cruce-avisos-backend"
+main = "src/index.js"
+compatibility_date = "2026-07-02"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+TENANT_ID = "organizations"
+SITE_HOST = "brillaseo2.sharepoint.com"
+SITE_PATH = "/sites/SoportesEspejo"
+DRIVE_NAME = "Shared Documents"
+FOLDER_PATH = ""
+MAX_FILES = "500"
+
+# Configura estos valores como secretos, no aqui:
+# wrangler secret put CLIENT_ID
+# wrangler secret put CLIENT_SECRET
