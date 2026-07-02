@@ -29,7 +29,7 @@ export default {
 
         const masterAvisos = readMasterFromWorkbook(await file.arrayBuffer());
         const avisoSet = new Set(masterAvisos.map((item) => item.aviso));
-        const { hallazgos, errors, stats } = await getHallazgosForAvisos(env, avisoSet);
+        const { hallazgos, errors, stats } = await getHallazgosFromIndex(env, avisoSet);
         const data = buildDataset(masterAvisos, hallazgos, stats);
         data.source = file.name || "AVISOS.xlsx";
         data.errors = errors.slice(0, 50);
@@ -191,6 +191,29 @@ async function getHallazgosForAvisos(env, avisoSet) {
   return { hallazgos, errors, stats: { archivos: files.length, escaneados: scanned, cache: 0 } };
 }
 
+async function getHallazgosFromIndex(env, avisoSet) {
+  const { drive } = await getDriveAndFolder(env);
+  const folderPath = String(env.FOLDER_PATH || "").replace(/^\/+|\/+$/g, "");
+  const indexFile = String(env.INDEX_FILE || "indice_avisos.json").replace(/^\/+/, "");
+  const indexPath = folderPath ? `${folderPath}/${indexFile}` : indexFile;
+  const encoded = encodeGraphPath(indexPath);
+  const content = await graphRequest(env, `/drives/${drive.id}/root:/${encoded}:/content`);
+  const text = new TextDecoder("utf-8").decode(content);
+  const index = JSON.parse(text);
+  const hallazgos = (index.hallazgos || []).filter((hit) => avisoSet.has(String(hit.aviso || "")));
+  return {
+    hallazgos,
+    errors: index.errors || [],
+    stats: {
+      archivos: index.totalFiles || index.archivos?.length || 0,
+      escaneados: 0,
+      cache: 0,
+      indice: true,
+      indiceGenerado: index.generatedAt || ""
+    }
+  };
+}
+
 function scanWorkbook(content, item, avisoSet) {
   const hits = [];
   const workbook = XLSX.read(content, { type: "array", cellDates: true, dense: false });
@@ -327,6 +350,13 @@ function isExcelFile(name = "") {
   if (name.startsWith("~$")) return false;
   const lower = name.toLowerCase();
   return [...EXCEL_EXTENSIONS].some((ext) => lower.endsWith(ext));
+}
+
+function encodeGraphPath(path) {
+  return String(path)
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
 }
 
 function normalizeHeader(value) {

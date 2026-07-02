@@ -163,6 +163,12 @@ function render() {
 
 
 async function refreshLocalCross() {
+  if (BACKEND_URL.includes("workers.dev")) {
+    const status = document.getElementById("fileStatus");
+    status.textContent = "Selecciona el archivo AVISOS.xlsx para consultar el SharePoint espejo desde el backend cloud.";
+    document.getElementById("xlsxInput").click();
+    return;
+  }
   const button = document.getElementById("refreshCross");
   const status = document.getElementById("fileStatus");
   const original = button.textContent;
@@ -199,7 +205,8 @@ async function tryBackendCross(file, status) {
   rebuildFilterOptions();
   render();
   const graph = payload.data.meta?.graph || {};
-  status.textContent = `Fuente actual: ${file.name} | ${fmt.format(data.avisos.length)} avisos cruzados contra SharePoint. Archivos: ${fmt.format(graph.archivos || data.meta.archivos || 0)} | Reescaneados: ${fmt.format(graph.escaneados || 0)} | Cache: ${fmt.format(graph.cache || 0)}.`;
+  const indexText = graph.indice ? ` | Indice: ${graph.indiceGenerado || "activo"}` : ` | Reescaneados: ${fmt.format(graph.escaneados || 0)} | Cache: ${fmt.format(graph.cache || 0)}`;
+  status.textContent = `Fuente actual: ${file.name} | ${fmt.format(data.avisos.length)} avisos cruzados contra SharePoint. Archivos: ${fmt.format(graph.archivos || data.meta.archivos || 0)}${indexText}.`;
   return true;
 }
 async function handleXlsxUpload(event) {
@@ -212,6 +219,10 @@ async function handleXlsxUpload(event) {
     return;
   } catch (backendError) {
     console.warn("Backend Graph no disponible; usando data local.", backendError);
+    if (BACKEND_URL) {
+      status.textContent = `No se pudo consultar SharePoint desde el backend: ${backendError.message}`;
+      return;
+    }
     status.textContent = `Backend Graph no disponible: ${backendError.message}. Usando data local precargada...`;
   }
   try {

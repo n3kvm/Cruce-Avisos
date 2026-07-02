@@ -21,6 +21,25 @@ En la App Registration:
    - `Sites.Selected` si el admin solo autoriza el sitio espejo.
 4. El administrador debe conceder consentimiento.
 
+## Bloqueo por Conditional Access
+
+Si al probar `/api/cruce` aparece un error como:
+
+```text
+AADSTS53003: Access has been blocked by Conditional Access policies.
+```
+
+el Worker esta funcionando, pero Microsoft Entra esta negando la emision del token.
+
+Solucion administrativa:
+
+1. Revisar la politica de Conditional Access indicada en el error.
+2. Permitir el uso de la App Registration / service principal del backend.
+3. Excluir esa aplicacion de la politica que bloquea `client_credentials`, o crear una politica especifica para workload identities.
+4. Confirmar que los permisos de Microsoft Graph tengan consentimiento de administrador.
+
+Mientras ese bloqueo exista, Cloudflare Worker no podra consultar SharePoint aunque el codigo este correcto.
+
 El Worker usa flujo `client_credentials` contra:
 
 ```text

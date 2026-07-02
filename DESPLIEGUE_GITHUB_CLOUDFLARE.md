@@ -77,6 +77,8 @@ CLIENT_SECRET
 TENANT_ID
 ```
 
+Si Microsoft devuelve `AADSTS53003`, hay una politica de Conditional Access bloqueando la emision del token para el backend cloud. Un administrador debe permitir la App Registration / service principal o ajustar la politica para workload identities.
+
 ## 4. Crear el Worker en Cloudflare
 
 No uses un Worker existente que ya pertenezca a otra aplicacion. Si tienes uno llamado `indicadordocumental`, dejalo quieto.
