@@ -35,13 +35,13 @@ configura el backend asi:
 SITE_HOST=brillaseo2.sharepoint.com
 SITE_PATH=/sites/SoportesEspejo
 DRIVE_NAME=Shared Documents
-FOLDER_PATH=
+FOLDER_PATH=Z3 MODULO DE APROBACIONES - Maria Fernanda Gutierrez
 ```
 
-`FOLDER_PATH` vacio significa: consultar toda la biblioteca `Shared Documents` de forma recursiva. Si solo quieres leer una carpeta, coloca el nombre exacto:
+`FOLDER_PATH` debe contener la carpeta exacta dentro de `Shared Documents` que se va a consultar:
 
 ```env
-FOLDER_PATH=Soportes
+FOLDER_PATH=Z3 MODULO DE APROBACIONES - Maria Fernanda Gutierrez
 ```
 
 ## Configurar Microsoft Graph
@@ -59,7 +59,7 @@ TENANT_ID=organizations
 SITE_HOST=brillaseo2.sharepoint.com
 SITE_PATH=/sites/SoportesEspejo
 DRIVE_NAME=Shared Documents
-FOLDER_PATH=
+FOLDER_PATH=Z3 MODULO DE APROBACIONES - Maria Fernanda Gutierrez
 ```
 
 ## Ejecutar backend local

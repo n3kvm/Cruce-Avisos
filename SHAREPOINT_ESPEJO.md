@@ -16,21 +16,10 @@ configura:
 SITE_HOST=brillaseo2.sharepoint.com
 SITE_PATH=/sites/SoportesEspejo
 DRIVE_NAME=Shared Documents
-FOLDER_PATH=
+FOLDER_PATH=Z3 MODULO DE APROBACIONES - Maria Fernanda Gutierrez
 ```
 
-Con `FOLDER_PATH` vacio, el backend lee recursivamente toda la biblioteca `Shared Documents`, incluyendo carpetas como:
-
-- `Soportes`
-- `Z3 MODULO DE APROBACIONES - Maria Fernanda Gutierrez`
-
-Si quieres limitar la consulta a una sola carpeta, usa:
-
-```env
-FOLDER_PATH=Soportes
-```
-
-o:
+El backend lee recursivamente esta carpeta:
 
 ```env
 FOLDER_PATH=Z3 MODULO DE APROBACIONES - Maria Fernanda Gutierrez
@@ -59,6 +48,6 @@ Debe responder algo parecido a:
   "ok": true,
   "mode": "graph",
   "site": "brillaseo2.sharepoint.com/sites/SoportesEspejo",
-  "folder": ""
+  "folder": "Z3 MODULO DE APROBACIONES - Maria Fernanda Gutierrez"
 }
 ```

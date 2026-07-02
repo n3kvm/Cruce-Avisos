@@ -30,7 +30,7 @@ TENANT_ID = os.getenv("TENANT_ID", "organizations")
 SITE_HOST = os.getenv("SITE_HOST", "brillaseo2.sharepoint.com")
 SITE_PATH = os.getenv("SITE_PATH", "/sites/SoportesEspejo")
 DRIVE_NAME = os.getenv("DRIVE_NAME", "Shared Documents")
-FOLDER_PATH = os.getenv("FOLDER_PATH", "")
+FOLDER_PATH = os.getenv("FOLDER_PATH", "Z3 MODULO DE APROBACIONES - Maria Fernanda Gutierrez")
 SCOPES = os.getenv("GRAPH_SCOPES", "https://graph.microsoft.com/Files.Read.All offline_access").split()
 EXCEL_EXTENSIONS = {".xlsx", ".xlsm", ".xls"}
 
