@@ -198,8 +198,9 @@ async function getHallazgosFromIndex(env, avisoSet) {
   const indexPath = folderPath ? `${folderPath}/${indexFile}` : indexFile;
   const encoded = encodeGraphPath(indexPath);
   const content = await graphRequest(env, `/drives/${drive.id}/root:/${encoded}:/content`);
-  const text = new TextDecoder("utf-8").decode(content);
-  const index = JSON.parse(text);
+  const index = content instanceof ArrayBuffer
+    ? JSON.parse(new TextDecoder("utf-8").decode(content))
+    : content;
   const hallazgos = (index.hallazgos || []).filter((hit) => avisoSet.has(String(hit.aviso || "")));
   return {
     hallazgos,
